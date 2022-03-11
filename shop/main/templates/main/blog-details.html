@@ -1,0 +1,148 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+
+  {% block main %}
+
+
+  <main class="main-content site-wrapper-reveal">
+    <!--== Start Page Title Area ==-->
+    <section class="page-title-area" data-bg-img="{% static 'main/assets/img/photos/bg-page-title.webp' %}">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="page-title-content text-center">
+              <h2 class="title text-white">{{post.title}}</h2>
+              <div class="bread-crumbs">
+                <a href="/">Home
+                  <span class="breadcrumb-sep">/</span>
+                </a>
+                <a href="{% url 'blog' %}">Blog
+                  <span class="breadcrumb-sep">/</span>
+                </a>
+                <span class="active">{{post.title}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--== End Page Title Area ==-->
+
+    <!--== Start Blog Area Wrapper ==-->
+    <section class="blog-grid-area">
+      <div class="container">
+        <div class="row flex-row-reverse">
+          <div class="col-lg-9">
+            <div class="post-details-content">
+              <div class="post-details-body">
+                <div class="content">
+                  <div class="thumb">
+                    <img src="{{post.photo.url}}" alt="Blog">
+                  </div>
+                  <h4>{{post.title}}</h4>
+                  <ul class="meta">
+                    <li class="date">{{post.publish|date:"d-m-Y H:i"}}</li>
+                  </ul>
+                  <p>{{post.text}}</p>
+                  <div class="category-social-content">
+<!--                    <div class="social-items">-->
+<!--                      <span>share :</span>-->
+<!--                      <a href="#/"><i class="ion-social-facebook"></i></a>-->
+<!--                      <a href="#/"><i class="ion-social-twitter"></i></a>-->
+<!--                      <a href="#/"><i class="ion-social-pinterest"></i></a>-->
+<!--                      <a href="#/"><i class="ion-social-googleplus"></i></a>-->
+<!--                    </div>-->
+                  </div>
+                </div>
+                <div class="comment-area">
+                 <h2 class="title">{{count}} comments </h2>
+                  {% for c in comments %}
+
+
+                  <div class="comment-content">
+                    <div class="single-comment">
+                      <div class="author-info">
+<!--                        <div class="thumb">-->
+<!--                          <img src="assets/img/blog/c1.jpg" alt="Image">-->
+<!--                        </div>-->
+                        <div class="author-details">
+                          <h4 class="name">{{c.name}}</h4>
+                          <div class="comment-date">{{c.created|date:"d-m-Y H:i"}} </div>
+                          <p>{{c.text}}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                  <div class="comment-form">
+                    <h2 class="title">Leave a comment</h2>
+                    <form action="" method="POST">  {% csrf_token %}
+                      <div class="comment-form-content">
+                        <div class="row row-gutter-20">
+                          <div class="col-md-6">
+                            <div class="form-group">
+                            <div class="fcc">  {{comment_form.name}}  </div>
+                            </div>
+                          </div>
+                          <div class="col-md-12">
+                            <div class="form-group mb-0">
+                                <div class="fcc">  {{comment_form.text}}  </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="col-md-12">
+                            <div class="form-group">
+                              <button class="btn btn-theme" type="submit">Post comment</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="sidebar-area mt-md-50">
+
+              <div class="widget">
+                <h3 class="widget-title">Recent Post</h3>
+                <div class="widget-blog-post">
+                  <ul>
+
+                    {% for e in recent %}
+                    <li>
+                      <div class="thumb">
+                        <a href="{{e.get_absolute_url}}"><img src="{{e.photo.url}}" alt="Image-HasTech"></a>
+                      </div>
+                      <div class="content">
+                        <a href="{{e.get_absolute_url}}">{{e.title}}</a>
+                        <span>{{e.publish|date:"d-m-Y"}}</span>
+<!--                        <span>{{e.views}}</span>-->
+                      </div>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+
+              <div class="widget mb-0 pb-3">
+                <h3 class="widget-title">follow us</h3>
+                <div class="widget-socials">
+                  <a href="#/"><i class="fa fa-facebook"></i></a>
+                  <a href="#/"><i class="fa fa-twitter"></i></a>
+                  <a href="#/"><i class="fa fa-instagram"></i></a>
+                  <a href="#/"><i class="fa fa-skype"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--== End Blog Area Wrapper ==-->
+  </main>
+
+{% endblock %}

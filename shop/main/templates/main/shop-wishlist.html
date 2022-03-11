@@ -1,0 +1,67 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+
+  {% block main %}
+
+  <main class="main-content site-wrapper-reveal">
+    <!--== Start Page Title Area ==-->
+    <section class="page-title-area" data-bg-img="{% static 'main/assets/img/photos/bg-page-title.webp' %}">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="page-title-content text-center">
+              <h2 class="title text-white">Wishlist</h2>
+              <div class="bread-crumbs"><a href="/">Home<span class="breadcrumb-sep">/</span></a><span class="active">Wishlist</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--== End Page Title Area ==-->
+
+    <!--== Start Product Area Wrapper ==-->
+    <section class="product-area wishlist-area">
+      <div class="container">
+        <div class="row">
+          {% for item in wishlist %}
+            {% with product=item.product %}
+          <div class="col-sm-6 col-md-4 col-lg-3">
+            <!-- Start Product Item -->
+            <div class="wishlist-item">
+              <div class="wishlist-thumb">
+                <a href="{% url 'shop_single' product.category.slug product.slug %}">
+                  <img src="{{product.photo.url}}" alt="Alan-Shop">
+                </a>
+                <div class="wishlist-action">
+                  <a class="action-quick-vie" href="{% url 'wishlist_remove' product.id %}" title="Quick View">
+                    <i class="ion-android-favorite-outline" style="color: #ff0000;"></i>
+                  </a>
+                  <a class="action-quick-view" href="javascript:void(0);" title="Quick View">
+                    <i class="ion-ios-search-strong"></i>
+                  </a>
+                </div>
+              </div>
+              <div class="wishlist-info">
+                <h4 class="title"><a href="shop-single-product.html">{{product.name}}</a></h4>
+                <form action="{% url 'cart_add' product.id %}" method="post" id="cart"> {% csrf_token %}
+                             <span hidden>{{ cart_product_form }}</span>
+                <button class="btn-wishlist" type="submit"><i class="fa fa-plus"></i> Add to cart</button>
+
+                </form>
+                <div class="prices">
+                  <span class="price">${{product.price}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+            {% endwith %}
+           {% endfor %}
+        </div>
+      </div>
+    </section>
+
+            <!-- End Product Item -->
+
+  </main>
+
+{% endblock %}

@@ -1,0 +1,138 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+
+  {% block main %}
+
+
+  <main class="main-content site-wrapper-reveal">
+    <!--== Start Page Title Area ==-->
+    <section class="page-title-area" data-bg-img="{% static 'main/assets/img/photos/bg-page-title.webp' %}">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="page-title-content text-center">
+              <h2 class="title text-white">Blog</h2>
+              <div class="bread-crumbs"><a href="/">Home<span class="breadcrumb-sep">/</span></a><span class="active">Blog</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--== End Page Title Area ==-->
+
+    <!--== Start Blog Area Wrapper ==-->
+    <section class="blog-grid-area">
+      <div class="container">
+        <div class="row flex-row-reverse">
+          <div class="col-lg-9">
+            <div class="blog-content-area post-items-style2">
+              <div class="row">
+                {% for e in el %}
+                <div class="col-md-6 col-lg-12">
+                  <!--== Start Blog Post Item ==-->
+                  <div class="post-item">
+                    <div class="thumb">
+                     <a href="{{e.get_absolute_url}}"><img src="{{e.photo.url}}" alt="Blog"></a>
+                    </div>
+                    <div class="content">
+                      <div class="inner-content">
+                        <h4 class="title">
+                          <a href="{{e.get_absolute_url}}">{{e.title}}</a>
+                        </h4>
+                        <div class="meta">
+                          <a class="post-date" href="{{e.get_absolute_url}}">{{e.publish|date:"d-m-Y H:i"}}</a>
+
+                        </div>
+                        <p> {{e.text}} </p>
+                       <a class="btn-blog" href="{{e.get_absolute_url}}">Read More</a>
+                      </div>
+                    </div>
+                  </div>
+                  <!--== End Blog Post Item ==-->
+                </div>
+              {% endfor %}
+              </div>
+        <div class="pagination-area">
+              <nav>
+                <ul class="page-numbers">
+                  <li>
+                  {% if el.has_previous %}
+                    <a class="page-number next" href="?page={{ el.previous_page_number }}">
+                      <i class="ion-ios-arrow-left"></i>
+                      Prev
+                    </a>
+                   {% endif %}
+                  </li>
+        {% for p in el.paginator.page_range %}
+         <li>
+            <a class="page-number" href="?page={{ p }}">{{ p }}</a>
+         </li>
+        {% endfor %}
+                  <li>
+                      {% if el.has_next %}
+                    <a class="page-number next" href="?page={{ el.next_page_number }}">
+                      Next
+                      <i class="ion-ios-arrow-right"></i>
+                    </a>
+                      {% endif %}
+                  </li>
+                </ul>
+              </nav>
+              <div class="total-pages">
+                <p>Showing {{el.start_index}}-{{el.end_index}} of {{posts.count}} result</p>
+              </div>
+            </div>
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="sidebar-area mt-md-70">
+              <div class="widget">
+                <div class="widget-search-box">
+                  <form action="{% url 'blog' %}" method="get">
+                    <div class="form-input-item">
+<!--                      <label for="search2" class="sr-only">Search Here</label>-->
+                      <input type="text" id="search2" placeholder="Search" name="search">
+                      <button type="submit" class="btn-src">
+                        <i class="ion-ios-search-strong"></i>
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div class="widget">
+                <h3 class="widget-title">Recent Post</h3>
+                <div class="widget-blog-post">
+                  <ul>
+                    {% for post in recent %}
+                    <li>
+                      <div class="thumb">
+                        <a href="{{post.get_absolute_url}}"><img src="{{post.photo.url}}" alt="Image-HasTech"></a>
+                      </div>
+                      <div class="content">
+                        <a href="{{post.get_absolute_url}}">{{post.title}}</a>
+                        <span>{{post.publish|date:"d-m-Y"}}</span>
+<!--                        <span>{{post.views}}</span>-->
+                      </div>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+              <div class="widget mb-0 pb-3">
+                <h3 class="widget-title">follow us</h3>
+                <div class="widget-socials">
+                  <a href="#/"><i class="fa fa-facebook"></i></a>
+                  <a href="#/"><i class="fa fa-twitter"></i></a>
+                  <a href="#/"><i class="fa fa-instagram"></i></a>
+                  <a href="#/"><i class="fa fa-skype"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--== End Blog Area Wrapper ==-->
+  </main>
+
+ {% endblock %}

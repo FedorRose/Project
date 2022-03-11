@@ -1,0 +1,110 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+
+  {% block main %}
+
+
+  <main class="main-content site-wrapper-reveal">
+    <!--== Start Page Title Area ==-->
+    <section class="page-title-area" data-bg-img="{% static 'main/assets/img/photos/bg-page-title.webp' %}">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="page-title-content text-center">
+              <h2 class="title text-white">YOUR SHOPPING CART</h2>
+              <div class="bread-crumbs"><a href="/">Home<span class="breadcrumb-sep">/</span></a><span class="active">Your Shopping Cart</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--== End Page Title Area ==-->
+
+    <!--== Start Cart Area Wrapper ==-->
+    <section class="cart-page-area">
+      <div class="container pt-100 pb-100">
+        <div class="row">
+          <div class="col-12">
+            <div class="cart-table table-responsive">
+              <table>
+                <thead>
+                  <tr>
+                    <th class="pro-thumbnail">Image</th>
+                    <th class="pro-title">Product</th>
+                    <th class="pro-price">Price</th>
+                    <th class="pro-quantity">Quantity</th>
+                    <th class="pro-subtotal">Total</th>
+                    <th class="pro-remove">Remove</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for item in cart %}
+                  {% with product=item.product %}
+                  <tr>
+                    <td class="pro-thumbnail">
+                      <a href="{% url 'shop_single' product.category.slug product.slug %}">
+                        <img src="{{product.photo.url}}" alt="Alan-Shop">
+                      </a>
+                    </td>
+                    <td class="pro-title">
+                      <h4><a href="{% url 'shop_single' product.category.slug product.slug %}">{{ product.name }}</a></h4>
+                    </td>
+                    <td class="pro-price"><span>{{product.price}}</span></td>
+                    <td class="pro-quantity">
+                      <div class="quick-product-action">
+<!--                        <div class="pro-qty">-->
+
+                        <a type="text" id="quantity" title="Quantity">{{ item.quantity }}</a>
+<!--                        </div>-->
+                      </div>
+                    </td>
+                    <td class="pro-subtotal"><span>${{ item.total_price }}</span></td>
+                    <td class="pro-remove"><a href= "{% url 'cart_remove' product.id %}">×</a></td>
+                  </tr>
+                {% endwith %}
+                {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="cart-buttons">
+              <a class="btn-shopping continue-shopping" href="{% url 'shop' 'all' %}">Continue Shopping</a>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="cart-payment">
+              <div class="row">
+
+                <div class="col-lg-6">
+                  <div class="cart-subtotal">
+                    <h3 class="title">Cart Totals</h3>
+                    <table>
+                      <tbody>
+                        <tr class="cart-subtotal">
+                          <th>Subtotal</th>
+                          <td>
+                            <span class="amount">${{ cart.get_total_price }}</span>
+                          </td>
+                        </tr>
+                        <tr class="order-total">
+                          <th>Total</th>
+                          <td>
+                            <span class="price">${{ cart.get_total_price }}</span>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <a class="btn-theme" href="{% url 'shop_checkout' %}">Proceed to Checkout</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--== End Cart Area Wrapper ==-->
+  </main>
+
+{% endblock %}

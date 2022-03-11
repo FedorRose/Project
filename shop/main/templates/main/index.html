@@ -1,0 +1,284 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+
+  {% block main %}
+  <main class="main-content">
+    <!--== Start Hero Area Wrapper ==-->
+    <section class="home-slider-area slider-default">
+      <div class="home-slider-content">
+        <div class="swiper-container home-slider-container">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide">
+              <!-- Start Slide Item -->
+              <div class="home-slider-item bg-img-cover" data-bg-img="{% static 'main/assets/img/slider/1.png' %}">
+                <div class="slider-content-area">
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="content m-auto">
+                          <div class="inner-content">
+                            <div class="tittle-wrp">
+                              <h2>Ice Cream Coop <br>New item</h2>
+                            </div>
+                            <div class="btn-wrp">
+                              <a href="{% url 'shop' 'all' %}" class="btn-link">Shop Now</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- End Slide Item -->
+            </div>
+            <div class="swiper-slide">
+              <!-- Start Slide Item -->
+              <div class="home-slider-item bg-img-cover" data-bg-img="{% static 'main/assets/img/slider/2.png' %}">
+                <div class="slider-content-area">
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="content m-auto">
+                          <div class="inner-content">
+                            <div class="tittle-wrp">
+                              <h2>Kitchen tool crock <br>Featured Item</h2>
+                            </div>
+                            <div class="btn-wrp">
+                              <a href="{% url 'shop' 'all' %}" class="btn-link">Shop Now</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- End Slide Item -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--== End Hero Area Wrapper ==-->
+
+    <!--== Start Product Area Wrapper ==-->
+    <section class="product-area latest-product-area" data-aos="fade-up" data-aos-duration="1000">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8 col-lg-6 m-auto">
+            <div class="section-title text-center">
+              <h2 class="title">Latest product</h2>
+              <p>Our latest item collection of 2021</p>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="swiper-container product4-slider-container">
+            <div class="swiper-wrapper">
+              {% for product in last %}
+              <div class="swiper-slide">
+                <!-- Start Product Item -->
+                <div class="product-item">
+                  <div class="product-thumb">
+                    <a href="{% url 'shop_single' product.category.slug product.slug %}">
+                      <img src="{{product.photo.url}}" alt="Alan-Shop">
+                    {% if product.sale > 0 %}
+                      <div class="ribbons">
+                        <span class="ribbon ribbon-hot">Sale</span>
+                        <span class="ribbon ribbon-onsale align-right">-{{product.sale}}%</span>
+                      </div>
+                      {% endif %}
+                    </a>
+                        <div class="product-action">
+                          {% if product in wishlist %}
+                          <a class="action-wishlist" href="{% url 'wishlist_remove' product.id %}" title="Wishlist">
+                              <i class="ion-android-favorite-outline" style="color: #ff0000;"></i> </a>
+                            {% else %}
+                              <a class="action-wishlist" href="{% url 'wishlist_add' product.id %}" title="Wishlist">
+                               <i class="ion-android-favorite-outline"></i> </a>
+                            {% endif %}
+<!--                          <a class="action-quick-view"  href="javascript:void(0);" title="Quick View">-->
+<!--                            <i class="ion-ios-search-strong"></i>-->
+<!--                          </a>-->
+                          <a class="action-cart">
+                            <form action="{% url 'cart_add' product.id %}" method="post"> {% csrf_token %}
+                             <span hidden>{{ cart_product_form.quantity }}</span>
+                             <i>
+                               <button class="fa fa-opencart" type="submit" style="height:100%; width:100%; background-color: transparent; border: none;"> {{ cart_product_form.update }} </button>
+                              </i>
+                            </form>
+                          </a>
+                        </div>
+                  </div>
+                  <div class="product-info">
+                    <h4 class="title"><a href="{% url 'shop_single' product.category.slug product.slug %}">{{product.title}}</a></h4>
+                    <div class="prices">
+                      <span class="price">${{product.price}}</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- End Product Item -->
+              </div>
+              {% endfor %}
+              <div class="swiper-slide">
+<!--             </div>-->
+            </div>
+          </div>
+        </div>
+      </div>  </div>
+    </section>
+    <!--== End Product Area Wrapper ==-->
+
+    <!--== Start Offer Area Wrapper ==-->
+    <section class="offer-area" data-aos="fade-up" data-aos-duration="1000">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="single-offer">
+              <div class="thumb">
+                <a href="{% url 'shop' 'cutting-board' %}">
+                  <img src="{% static 'main/assets/img/shop/offer-1.webp' %}" alt="Alan-Shop">
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="single-offer">
+              <div class="thumb">
+                <a href="{% url 'shop' 'granite' %}">
+                  <img src="{% static 'main/assets/img/shop/offer-2.webp' %}" alt="Alan-Shop">
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--== End Offer Area Wrapper ==-->
+
+    <!--== Start Featured Product Area Wrapper ==-->
+    <section class="product-area featured-product-area" data-aos="fade-up" data-aos-duration="1000">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8 col-lg-6 m-auto">
+            <div class="section-title text-center">
+              <h2 class="title">Featured Product</h2>
+              <p>Best selling item in our collection</p>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+
+          {% for product in recent %}
+
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <!-- Start Product Item -->
+            <div class="product-item">
+                  <div class="product-thumb">
+                    <a href="{% url 'shop_single' product.category.slug product.slug %}">
+                      <img src="{{product.photo.url}}" alt="Alan-Shop">
+                    {% if product.sale > 0 %}
+                      <div class="ribbons">
+                        <span class="ribbon ribbon-hot">Sale</span>
+                        <span class="ribbon ribbon-onsale align-right">-{{product.sale}}%</span>
+                      </div>
+                      {% endif %}
+                    </a>
+                        <div class="product-action">
+                          {% if product in wishlist %}
+                          <a class="action-wishlist" href="{% url 'wishlist_remove' product.id %}" title="Wishlist">
+                              <i class="ion-android-favorite-outline" style="color: #ff0000;"></i> </a>
+                            {% else %}
+                              <a class="action-wishlist" href="{% url 'wishlist_add' product.id %}" title="Wishlist">
+                               <i class="ion-android-favorite-outline"></i> </a>
+                            {% endif %}
+                          <a class="action-cart">
+                            <form action="{% url 'cart_add' product.id %}" method="post" id="cart"> {% csrf_token %}
+                             <span hidden>{{ cart_product_form.quantity }}</span>
+                             <i>
+                               <button class="fa fa-opencart" type="submit" style="height:100%; width:100%; background-color: transparent; border: none;"> {{ cart_product_form.update }} </button>
+                              </i>
+                            </form>
+                          </a>
+                        </div>
+                  </div>
+                  <div class="product-info">
+                    <h4 class="title"><a href="{% url 'shop_single' product.category.slug product.slug %}">{{product.title}}</a></h4>
+                    <div class="prices">
+                      <span class="price">${{product.price}}</span>
+                    </div>
+                  </div>
+                </div>
+            <!-- End Product Item -->
+          </div>
+{% endfor %}
+
+
+        </div>
+      </div>
+    </section>
+    <!--== End Featured Product Area Wrapper ==-->
+
+    <!--== Start Newsletter Area Wrapper ==-->
+    <section class="newsletter-area">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12 col-lg-6 m-auto" data-aos="fade-up" data-aos-duration="1000">
+            <div class="section-title text-center">
+              <h2 class="title">Join to our Newsletter</h2>
+              <p>If you never miss our interesting news by joining our newsletter.</p>
+            </div>
+            <form class="input-btn-group" method="POST"> {% csrf_token %}
+              <div class="fcl">
+                     {{form.email}}
+              </div>
+              <button class="btn btn-theme btn-black" type="submit">Subscribe!</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--== End Newsletter Area Wrapper ==-->
+
+    <!--== Start Blog Area Wrapper ==-->
+    <section class="blog-area blog-default-area">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8 col-lg-6 m-auto" data-aos="fade-up" data-aos-duration="1000">
+            <div class="section-title text-center">
+              <h2 class="title">Latest Blog</h2>
+              <p>Follow our blog for collect information</p>
+            </div>
+          </div>
+        </div>
+        <div class="row" data-aos="fade-up" data-aos-duration="1000">
+          {% for e in blog %}
+          <div class="col-md-6">
+            <!--== Start Blog Post Item ==-->
+            <div class="post-item mb-md-150 mb-sm-30">
+              <div class="thumb">
+                <a href="{{e.get_absolute_url}}"><img src="{{e.photo.url}}" alt="Alan-Blog"></a>
+              </div>
+              <div class="content">
+                <div class="inner-content">
+                  <h4 class="title">
+                    <a href="{{e.get_absolute_url}}">{{e.title}}</a>
+                  </h4>
+                  <div class="meta">
+                    <a class="post-date">{{e.publish}}</a>
+                  </div>
+                  <p>{{e.text|truncatewords:250}}</p>
+                  <a class="btn-blog" href="{{e.get_absolute_url}}">Read More</a>
+                </div>
+              </div>
+            </div>
+            <!--== End Blog Post Item ==-->
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+    <!--== End Blog Area Wrapper ==-->
+  </main>
+{% endblock %}

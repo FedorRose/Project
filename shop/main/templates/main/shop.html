@@ -1,0 +1,183 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+
+  {% block main %}
+
+<main class="main-content site-wrapper-reveal" xmlns="http://www.w3.org/1999/html">
+    <!--== Start Page Title Area ==-->
+    <section class="page-title-area" data-bg-img="{% static 'main/assets/img/photos/bg-page-title.webp' %}">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="page-title-content text-center">
+              <h2 class="title text-white">Products</h2>
+              {% if category %}
+                <div class="bread-crumbs"><a href="{% url 'shop' 'all' %}">Products<span class="breadcrumb-sep">/</span></a><a href="{% url 'shop' category.slug %}">{{category}}<span class="breadcrumb-sep">/</span></a></div>
+              {% else %}
+                <div class="bread-crumbs"><a href="/">Home<span class="breadcrumb-sep">/</span></a><span class="active">Products</span></div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--== End Page Title Area ==-->
+
+    <!--== Start Shop Area Wrapper ==-->
+    <section class="product-area product-grid-area">
+      <div class="container">
+        <div class="row flex-row-reverse">
+          <div class="col-lg-9">
+            <div class="row">
+              <div class="col-12">
+                <div class="shop-topbar-wrapper">
+                  <div class="collection-shorting">
+                    <div class="shop-topbar-left">
+                      <div class="view-mode">
+                        <nav>
+                          <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                          </div>
+                        </nav>
+                      </div>
+                <p>Showing {{el.start_index}}-{{el.end_index}} of {{products.count}} result</p>
+                    </div>
+                    <div class="product-sorting-wrapper">
+                      <div class="product-show">
+                        {% if category %}
+                       <form action="{% url 'shop' category.slug %}" method="get">
+                         {% else %}
+                        <form action="{% url 'shop' 'all' %}" method="get">
+                          {% endif %}
+                         <label>Sort by |            </label>
+                         {% for i in sm %}
+                         <input class="sm" type="submit" name="sort" value="{{i}}">
+                         {% endfor %}
+
+                       </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tab-content" id="nav-tabContent">
+              <div class="tab-pane fade show active" id="nav-grid" role="tabpanel" aria-labelledby="nav-grid-tab">
+                <div class="row">
+
+                {% for product in el %}
+                  <div class="col-md-6 col-xl-4">
+                    <!-- Start Product Item -->
+                    <div class="product-item">
+                      <div class="product-thumb">
+                        <a href="{% url 'shop_single' product.category.slug product.slug %}">
+                          <img src="{{product.photo.url}}" alt="Alan-Shop">
+                      {% if product.sale > 0 %}
+                      <div class="ribbons">
+                        <span class="ribbon ribbon-hot">Sale</span>
+                        <span class="ribbon ribbon-onsale align-right">-{{product.sale}}%</span>
+                      </div>
+                      {% endif %}
+                        </a>
+                        <div class="product-action">
+                          {% if product in wishlist %}
+                          <a class="action-wishlist" href="{% url 'wishlist_remove' product.id %}" title="Wishlist">
+                              <i class="ion-android-favorite-outline" style="color: #ff0000;"></i> </a>
+                            {% else %}
+                              <a class="action-wishlist" href="{% url 'wishlist_add' product.id %}" title="Wishlist">
+                               <i class="ion-android-favorite-outline"></i> </a>
+                            {% endif %}
+
+                          <a class="action-cart">
+                            <form action="{% url 'cart_add' product.id %}" method="post" id="cart"> {% csrf_token %}
+                             <span hidden>{{ cart_product_form.quantity }}</span>
+                             <i>
+                               <button class="fa fa-opencart" type="submit" style=" height:100%; width:100%; background-color: transparent; border: none;"> {{ cart_product_form.update }} </button>
+                              </i>
+                            </form>
+                          </a>
+                        </div>
+                      </div>
+                      <div class="product-info">
+                        <h4 class="title"><a href="{% url 'shop_single' product.category.slug product.slug %}">{{product.name}}</a></h4>
+                        <div class="prices">
+                          <span class="price">${{product.price}}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- End Product Item -->
+                  </div>
+              {% endfor %}
+                </div>
+               </div>
+               </div>
+
+
+        <div class="pagination-area">
+              <nav>
+                <ul class="page-numbers">
+                  <li>
+                  {% if el.has_previous %}
+                    <a class="page-number next" href="?page={{ el.previous_page_number }}">
+                      <i class="ion-ios-arrow-left"></i>
+                      Prev
+                    </a>
+                   {% endif %}
+                  </li>
+        {% for p in el.paginator.page_range %}
+         <li>
+            <a class="page-number" href="?page={{ p }}">{{ p }}</a>
+         </li>
+        {% endfor %}
+                  <li>
+                      {% if el.has_next %}
+                    <a class="page-number next" href="?page={{ el.next_page_number }}">
+                      Next
+                      <i class="ion-ios-arrow-right"></i>
+                    </a>
+                      {% endif %}
+                  </li>
+                </ul>
+              </nav>
+              <div class="total-pages">
+                <p>Showing {{el.start_index}}-{{el.end_index}} of {{products.count}} result</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-3">
+            <div class="shop-sidebar-area">
+              <div class="widget">
+                <h3 class="widget-title">Search</h3>
+                <div class="widget-search-box">
+                  <form action="{% url 'shop' 'all' %}" method="get">
+                    <div class="form-input-item">
+                      <label for="search2" class="sr-only">Search Here</label>
+                      <input type="text" id="search2" placeholder="Search our store" name="search">
+                      <button type="submit" class="btn-src"><i class="ion-ios-search-strong"></i></button>
+                    </div>
+                  </form>
+
+
+
+                </div>
+              </div>
+              <div class="widget">
+                <h3 class="widget-title">Categories</h3>
+                <div class="widget-categories-menu">
+                  <ul>
+                    <li><a href="{% url 'shop' 'all' %}">ALL</a></li>
+                    {% for el in categories %}
+                    <li><a href="{{el.get_absolute_url}}">{{el.name}}</a></li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--== End Shop Area Wrapper ==-->
+  </main>
+
+{% endblock %}
