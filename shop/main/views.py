@@ -3,9 +3,13 @@ from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
+from .utils import *
 from .wishlist import Wishlist
 from .forms import *
 from cart.forms import CartAddProductForm
+
+categories = Category.objects.all()
+cart_product_form = CartAddProductForm()
 
 
 def index(request):
@@ -25,8 +29,6 @@ def index(request):
     last_products = products.order_by('-created')[:6]
     recent = products.order_by('total_rating')[:12]
     wishlist = Wishlist(request).list()
-    cart_product_form = CartAddProductForm()
-    categories = Category.objects.all()
 
     return render(request, 'main/index.html', {'form': form,
                                                'blog': last_blog,
@@ -56,8 +58,6 @@ def shop(request, category_slug):
                                    Q(description__icontains=search_query))
 
     products = products.order_by(sort_need, sort)
-    categories = Category.objects.all()
-    cart_product_form = CartAddProductForm()
     wishlist = Wishlist(request).list()
     p = Paginator(products, 12)
     page_number = request.GET.get('page')
@@ -66,7 +66,6 @@ def shop(request, category_slug):
     return render(request, 'main/shop.html', {'el': page_obj,
                                               'categories': categories,
                                               'category': category,
-                                              'products': products,
                                               'sm': sort_mapping,
                                               'cart_product_form': cart_product_form,
                                               'wishlist': wishlist,
@@ -76,25 +75,8 @@ def shop(request, category_slug):
 def shop_single(request, product_slug, category_slug):
     product = get_object_or_404(Product, slug=product_slug, available=True)
     reviews = product.Reviews.filter(active=True).order_by('-created')
-    s, c, total_rating = 0, 0, 0
-    lr = []
-    for i in reviews:
-        s += sum(i.return_rating())
-        c += 1
-    if c:
-        total_rating = round(s/c)
-
-    if total_rating == 5:
-        lr = [1, 1, 1, 1, 1]
-    elif total_rating == 4:
-        lr = [1, 1, 1, 1, 0]
-    elif total_rating == 3:
-        lr = [1, 1, 1, 0, 0]
-    elif total_rating == 2:
-        lr = [1, 1, 0, 0, 0]
-    elif total_rating == 1:
-        lr = [1, 0, 0, 0, 0]
-
+    lr = totalrait(reviews)[0]
+    c = totalrait(reviews)[1]
     if request.method == 'POST':
         review_form = ReviewForm(request.POST)
         if review_form.is_valid():
@@ -107,8 +89,6 @@ def shop_single(request, product_slug, category_slug):
         return HttpResponseRedirect(reverse('shop_single', args=[category_slug, product_slug]))
     else:
         review_form = ReviewForm()
-    cart_product_form = CartAddProductForm()
-    categories = Category.objects.all()
     wishlist = Wishlist(request).list()
 
     return render(request, 'main/shop-single-product.html', {'product': product,
@@ -133,20 +113,16 @@ def contact(request):
             return HttpResponseRedirect(reverse('contact'))
     else:
         form = ContactForm()
-    categories = Category.objects.all()
 
     return render(request, 'main/contact.html', {'form': form, 'categories': categories, 'title': "Contact"})
 
 
 def about(request):
-    categories = Category.objects.all()
     return render(request, 'main/about.html', {'categories': categories, 'title': "About"})
 
 
 def wishlist_view(request):
     wishlist = Wishlist(request)
-    cart_product_form = CartAddProductForm()
-    categories = Category.objects.all()
     return render(request, 'main/shop-wishlist.html', {'wishlist': wishlist,
                                                        'cart_product_form': cart_product_form,
                                                        'categories': categories,
@@ -178,7 +154,6 @@ def blog(request):
     p = Paginator(posts, 3)
     page_number2 = request.GET.get('page')
     page_obj2 = p.get_page(page_number2)
-    categories = Category.objects.all()
 
     return render(request, 'main/blog.html', {'el': page_obj2,
                                               'posts': posts,
@@ -204,7 +179,6 @@ def blog_single(request, post_slug):
         return HttpResponseRedirect(reverse('blog_single', args=[post_slug]))
     else:
         comment_form = CommentForm()
-    categories = Category.objects.all()
 
     return render(request, 'main/blog-details.html', {'post': post,
                                                       'comments': comments,
